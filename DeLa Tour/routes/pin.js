@@ -4,7 +4,7 @@ var express = require('express');
 var PinController = require('../controllers/pin');
 
 var router = express.Router();
-
+//Rutas
 
 router.post('/save-pin', PinController.savePin);
 router.get('/pin/:id?', PinController.getPin);
