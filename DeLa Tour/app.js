@@ -6,7 +6,8 @@ var bodyParser = require('body-parser');
 var app = express();
 
 // cargar archivos rutas
-var project_routes = require('./routes/pin');
+var project_routes_pin = require('./routes/pin');
+var project_routes_usuario = require('./routes/usuario');
 
 // middlewares
 app.use(bodyParser.urlencoded({extended:false}));
@@ -22,7 +23,8 @@ app.use((req, res, next) => {
 });
 
 // rutas
-app.use('/api', project_routes);
+app.use('/api', project_routes_pin);
+app.use('/api', project_routes_usuario);
 
 
 // exportar
