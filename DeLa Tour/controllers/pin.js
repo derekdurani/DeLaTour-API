@@ -1,92 +1,111 @@
-'use strict'
+"use strict";
 
-var Pin = require('../models/pin');
+var Pin = require("../models/pin");
 
 var controller = {
-	
-	savePin: function(req, res){
-		var pin = new Pin();
+  savePin: function(req, res) {
+    var pin = new Pin();
 
-        const { titulo, descripcion, coords: { latitud, longitud}, estatus } = req.body;
-        
-		pin.titulo = titulo;
-		pin.descripcion = descripcion;
-		pin.coords.latitud = latitud;
-        pin.coords.longitud = longitud;
-        pin.estatus = estatus;
-        
-        console.log(pin);
+    const {
+      titulo,
+      descripcion,
+      coords: { latitud, longitud },
+      estatus,
+      imagen
+    } = req.body;
 
-		pin.save((err, pinStored) => {
-			if(err) return res.status(500).send({message: 'Error al guardar.'});
+    pin.titulo = titulo;
+    pin.descripcion = descripcion;
+    pin.coords.latitud = latitud;
+    pin.coords.longitud = longitud;
+    pin.estatus = estatus;
+    pin.imagen = imagen;
 
-			if(!pinStored) return res.status(404).send({message: 'No se ha podido guardar.'});
 
-			return res.status(200).send({pin: pinStored});
-		});
-	},
+    console.log(pin);
 
-	getPin: function(req, res){
-		var pinId = req.params.id;
+    pin.save((err, pinStored) => {
+      if (err) return res.status(500).send({ message: "Error al guardar." });
 
-		if(pinId == null) return res.status(404).send({message: 'El punto no existe.'});
+      if (!pinStored)
+        return res.status(404).send({ message: "No se ha podido guardar." });
 
-		Pin.findById(pinId, (err, pin) => {
+      return res.status(200).send({ pin: pinStored });
+    });
+  },
 
-			if(err) return res.status(500).send({message: 'Error al devolver los datos.'});
+  getPin: function(req, res) {
+    var pinId = req.params.id;
 
-			if(!pin) return res.status(404).send({message: 'El pin no existe.'});
+    if (pinId == null)
+      return res.status(404).send({ message: "El punto no existe." });
 
-			return res.status(200).send({
-				pin
-			});
+    Pin.findById(pinId, (err, pin) => {
+      if (err)
+        return res
+          .status(500)
+          .send({ message: "Error al devolver los datos." });
 
-		});
-	},
+      if (!pin) return res.status(404).send({ message: "El pin no existe." });
 
-	getPines: function(req, res){
+      return res.status(200).send({
+        pin
+      });
+    });
+  },
 
-		Pin.find({}).exec((err, pines) => {
+  getPines: function(req, res) {
+    Pin.find({}).exec((err, pines) => {
+      if (err)
+        return res
+          .status(500)
+          .send({ message: "Error al devolver los datos." });
 
-			if(err) return res.status(500).send({message: 'Error al devolver los datos.'});
+      if (!pines)
+        return res.status(404).send({ message: "No hay pines que mostrar." });
 
-			if(!pines) return res.status(404).send({message: 'No hay pines que mostrar.'});
+      return res.status(200).send({ pines });
+    });
+  },
 
-			return res.status(200).send({pines});
-		});
+  updatePin: function(req, res) {
+    var pinId = req.params.id;
+    var update = req.body;
 
-	},
+    Pin.findByIdAndUpdate(pinId, update, { new: true }, (err, pinUpdated) => {
+      if (err) return res.status(500).send({ message: "Error al actualizar" });
 
-	updatePin: function(req, res){
-		var pinId = req.params.id;
-		var update = req.body;
+      if (!pinUpdated)
+        return res
+          .status(404)
+          .send({ message: "No existe el pin para actualizar" });
 
-		Pin.findByIdAndUpdate(pinId, update, {new:true}, (err, pinUpdated) => {
-			if(err) return res.status(500).send({message: 'Error al actualizar'});
+      return res.status(200).send({
+        pin: pinUpdated
+      });
+    });
+  },
 
-			if(!pinUpdated) return res.status(404).send({message: 'No existe el pin para actualizar'});
+  deletePin: function(req, res) {
+    var pinId = req.params.id;
+    console.log(pinId);
 
-			return res.status(200).send({
-				pin: pinUpdated
-			});
-		});
+    Pin.findByIdAndRemove(pinId, (err, pinRemoved) => {
+      if (err)
+        return res
+          .status(500)
+          .send({ message: "No se ha podido borrar el pin" });
 
-	},
+      if (!pinRemoved)
+        return res
+          .status(404)
+          .send({ message: "No se puede eliminar ese pin." });
 
-	deletePin: function(req, res){
-		var pinId = req.params.id;
-
-		Pin.findByIdAndRemove(pinId, (err, pinRemoved) => {
-			if(err) return res.status(500).send({message: 'No se ha podido borrar el pin'});
-
-			if(!pinRemoved) return res.status(404).send({message: "No se puede eliminar ese pin."});
-
-			return res.status(200).send({
-				pin: pinRemoved
-			});
-		});
-	}
-
+      return res.status(200).send({
+        pin: pinRemoved
+      });
+    });
+  }
 };
 
 module.exports = controller;
