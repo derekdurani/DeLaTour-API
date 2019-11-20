@@ -7,7 +7,8 @@ var PinSchema = Schema({
 	titulo: String,
 	descripcion: String,
 	coords: {latitud: Number, longitud: Number},
-	estatus: Number
+	estatus: Number,
+	imagen: String 
 });
 
 module.exports = mongoose.model('Pin', PinSchema);
