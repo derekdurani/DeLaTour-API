@@ -5,11 +5,11 @@ var PinController = require("../controllers/pin");
 
 var router = express.Router();
 //Rutas
-debugger;
 
 router.post("/save-pin", PinController.savePin);
 router.get("/pin/:id?", PinController.getPin);
-router.get("/pines", PinController.getPines);
+router.get("/pines-agregados", PinController.getPinesAgregados);
+router.get("/pines-recomendados", PinController.getPinesRecomendados);
 router.put("/pin/:id", PinController.updatePin);
 router.get("/pin/del/:id?", PinController.deletePin);
 
