@@ -48,14 +48,14 @@ var controller = {
 
       if (!pin) return res.status(404).send({ message: "El pin no existe." });
 
-      return res.status(200).send({
+      return res.status(200).send(
         pin
-      });
+      );
     });
   },
 
-  getPines: function(req, res) {
-    Pin.find({}).exec((err, pines) => {
+  getPinesAgregados: function(req, res) {
+    Pin.find({estatus:1}).exec((err, pines) => {
       if (err)
         return res
           .status(500)
@@ -64,7 +64,21 @@ var controller = {
       if (!pines)
         return res.status(404).send({ message: "No hay pines que mostrar." });
 
-      return res.status(200).send({ pines });
+      return res.status(200).send( pines );
+    });
+  },
+
+  getPinesRecomendados: function(req, res) {
+    Pin.find({estatus:0}).exec((err, pines) => {
+      if (err)
+        return res
+          .status(500)
+          .send({ message: "Error al devolver los datos." });
+
+      if (!pines)
+        return res.status(404).send({ message: "No hay pines que mostrar." });
+
+      return res.status(200).send( pines );
     });
   },
 

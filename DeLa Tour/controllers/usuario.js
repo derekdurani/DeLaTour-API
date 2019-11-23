@@ -34,10 +34,31 @@ var controller = {
 
 			if(!usuario) return res.status(404).send({message: 'El usuario no existe.'});
 
-			return res.status(200).send({
+			return res.status(200).send(
 				usuario
-			});
+			);
 
+		});
+	},
+
+	loginUsuario: function(req,res){
+
+		var usuarioCorreo = req.body.correo;
+		var usuarioContrasenia = req.body.contrasenia;
+
+		if(usuarioCorreo == null || usuarioContrasenia == null) return res.status(404).send({message: 'El punto no existe'});
+		var query  =  {
+			correo:usuarioCorreo,
+			contrasenia:usuarioContrasenia
+		};
+		Usuario.find(query).exec((err,usuario) =>{
+			if(err) return res.status(500).send({message: 'Error al devolver los datos.' + err.toString()});
+
+			if(!usuario) return res.status(404).send({message: 'El usuario no existe.'});
+
+			return res.status(200).send(
+				usuario
+			);
 		});
 	},
 
@@ -49,7 +70,7 @@ var controller = {
 
 			if(!usuarios) return res.status(404).send({message: 'No hay usuarios que mostrar.'});
 
-			return res.status(200).send({usuarios});
+			return res.status(200).send(usuarios);
 		});
 
 	},
@@ -83,7 +104,6 @@ var controller = {
 			});
 		});
 	}
-
 };
 
 module.exports = controller;
