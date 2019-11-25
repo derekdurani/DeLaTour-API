@@ -54,6 +54,22 @@ var controller = {
     });
   },
 
+  getPinNombre: function(req,res){
+
+		var tituloPin = req.body.titulo;
+		
+		if(tituloPin == null) return res.status(404).send({message: 'El punto no existe'});
+		Pin.find({titulo:tituloPin}).exec((err,pin) =>{
+			if(err) return res.status(500).send({message: 'Error al devolver los datos.' + err.toString()});
+
+			if(!pin) return res.status(404).send({message: 'El pin no existe.'});
+
+			return res.status(200).send(
+				pin
+			);
+		});
+	},
+
   getPinesAgregados: function(req, res) {
     Pin.find({estatus:1}).exec((err, pines) => {
       if (err)
